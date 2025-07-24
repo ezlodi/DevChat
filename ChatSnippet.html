@@ -9,7 +9,13 @@
 	}
 </style>
 
+	
 <script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
+<script type='text/javascript'>
+liveagent.addCustomDetail("Case Subject", "Issue from Chat - Web");
+liveagent.addCustomDetail("Case Status", "New");
+liveagent.findOrCreate("Case").map("Subject","Case Subject",false,false,true).map("Status","Case Status",false,false,true).saveToTranscript("CaseId").showOnCreate();
+</script>
 <script type='text/javascript'>
 	var initESW = function(gslbBaseURL) {
 		embedded_svc.settings.displayHelpButton = true; //Or false
@@ -26,9 +32,7 @@
 			// Dynamically changes the button ID based on what the visitor enters in the pre-chat form.
 			// Returns a valid button ID.
 		//};
-		embedded_svc.settings.prepopulatedPrechatFields = {
-			Subject: "Issue from Chat - Web"
-		}; //Sets the auto-population of pre-chat form fields
+		//embedded_svc.settings.prepopulatedPrechatFields = {Subject: "Issue from Chat - Web"}; //Sets the auto-population of pre-chat form fields
 		//embedded_svc.settings.fallbackRouting = []; //An array of button IDs, user IDs, or userId_buttonId
 		//embedded_svc.settings.offlineSupportMinimizedText = '...'; //(Defaults to Contact Us)
 
