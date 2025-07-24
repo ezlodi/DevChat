@@ -14,11 +14,9 @@
 	var initESW = function(gslbBaseURL) {
 		embedded_svc.settings.displayHelpButton = true;
 		embedded_svc.settings.language = '';
+		embedded_svc.settings.debugMode = true; // Enable debug logs
 
-		// Enable debug logging
-		embedded_svc.settings.debugMode = true;
-
-		console.log("[ESW DEBUG] Initializing Embedded Service...");
+		console.log("[ESW DEBUG] Initializing Embedded Service with PersonType support...");
 
 		// Account and Case mapping
 		embedded_svc.settings.extraPrechatInfo = [
@@ -47,6 +45,13 @@
 						"doCreate": true,
 						"doFind": true,
 						"label": "Email"
+					},
+					{
+						"isExactMatch": false,
+						"fieldName": "PersonType",
+						"doCreate": true,
+						"doFind": false,
+						"value": "Exclusive Offers Only" // Required for Person Account creation
 					}
 				]
 			},
@@ -60,14 +65,16 @@
 						"fieldName": "Subject",
 						"doCreate": true,
 						"doFind": false,
-						"label": "Case Subject"
+						"label": "Case Subject",
+						"value": "Issue from Chat - Web"
 					},
 					{
 						"isExactMatch": false,
 						"fieldName": "Status",
 						"doCreate": true,
 						"doFind": false,
-						"label": "Case Status"
+						"label": "Case Status",
+						"value": "New"
 					}
 				]
 			}
@@ -89,17 +96,13 @@
 		embedded_svc.settings.enabledFeatures = ['LiveAgent'];
 		embedded_svc.settings.entryFeature = 'LiveAgent';
 
-		// Event listeners for debugging
-		embedded_svc.addEventHandler("onSettingsCallCompleted", function(data) {
-			console.log("[ESW DEBUG] Settings Call Completed:", data);
-		});
-
+		// Event logging for debugging
 		embedded_svc.addEventHandler("onPrechatFormSubmit", function(prechatData) {
-			console.log("[ESW DEBUG] Prechat Form Submitted with Data:", prechatData);
+			console.log("[ESW DEBUG] Prechat Form Data Submitted:", prechatData);
 		});
 
 		embedded_svc.addEventHandler("onChatRequestSuccess", function(data) {
-			console.log("[ESW DEBUG] Chat Request Successful:", data);
+			console.log("[ESW DEBUG] Chat Started Successfully:", data);
 		});
 
 		embedded_svc.addEventHandler("onChatEndedByAgent", function(data) {
