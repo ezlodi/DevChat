@@ -1,4 +1,5 @@
-<style type='text/css'>
+<html>
+ <style type='text/css'>
 	.embeddedServiceHelpButton .helpButton .uiButton {
 		background-color: #313F49;
 		font-family: "Arial", sans-serif;
@@ -8,12 +9,12 @@
 	}
 </style>
 
+	
 <script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
 <script type='text/javascript'>
 liveagent.addCustomDetail("Case Subject", "Issue from Chat - Web");
-liveagent.addCustomDetail("Case Origin", "Chat - Web");
 liveagent.addCustomDetail("Case Status", "New");
-liveagent.findOrCreate("Case").map("Subject","Case Subject",false,false,true).map("Status","Case Status",false,false,true).map("Origin","Case Origin",false,false,true).saveToTranscript("CaseId").showOnCreate();
+liveagent.findOrCreate("Case").map("Subject","Case Subject",false,false,true).map("Status","Case Status",false,false,true).saveToTranscript("CaseId").showOnCreate();
 </script>
 <script type='text/javascript'>
 	var initESW = function(gslbBaseURL) {
@@ -31,7 +32,7 @@ liveagent.findOrCreate("Case").map("Subject","Case Subject",false,false,true).ma
 			// Dynamically changes the button ID based on what the visitor enters in the pre-chat form.
 			// Returns a valid button ID.
 		//};
-		//embedded_svc.settings.prepopulatedPrechatFields = {}; //Sets the auto-population of pre-chat form fields
+		embedded_svc.settings.hiddenPrepopulatedFields = {Subject: "Issue from Chat - Web"}; //Sets the auto-population of pre-chat form fields
 		//embedded_svc.settings.fallbackRouting = []; //An array of button IDs, user IDs, or userId_buttonId
 		//embedded_svc.settings.offlineSupportMinimizedText = '...'; //(Defaults to Contact Us)
 
@@ -66,3 +67,4 @@ liveagent.findOrCreate("Case").map("Subject","Case Subject",false,false,true).ma
 		initESW('https://service.force.com');
 	}
 </script>
+</html>
