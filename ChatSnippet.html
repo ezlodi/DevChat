@@ -1,5 +1,5 @@
 <html>
- <style type='text/css'>
+<style type='text/css'>
 	.embeddedServiceHelpButton .helpButton .uiButton {
 		background-color: #313F49;
 		font-family: "Arial", sans-serif;
@@ -12,106 +12,26 @@
 <script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
 <script type='text/javascript'>
 	var initESW = function(gslbBaseURL) {
-		embedded_svc.settings.displayHelpButton = true;
-		embedded_svc.settings.language = '';
-		embedded_svc.settings.debugMode = true; // Enable debug logs
+		embedded_svc.settings.displayHelpButton = true; //Or false
+		embedded_svc.settings.language = ''; //For example, enter 'en' or 'en-US'
 
-		console.log("[ESW DEBUG] Initializing Embedded Service with PersonType support...");
+		//embedded_svc.settings.defaultMinimizedText = '...'; //(Defaults to Chat with an Expert)
+		//embedded_svc.settings.disabledMinimizedText = '...'; //(Defaults to Agent Offline)
 
-		// Account and Case mapping
-		embedded_svc.settings.extraPrechatInfo = [
-			{
-				"entityName": "Account",
-				"linkToEntityName": "Case",
-				"linkToEntityField": "AccountId",
-				"entityFieldMaps": [
-					{
-						"isExactMatch": false,
-						"fieldName": "PersonFirstName",
-						"doCreate": true,
-						"doFind": false,
-						"label": "First Name"
-					},
-					{
-						"isExactMatch": false,
-						"fieldName": "PersonLastName",
-						"doCreate": true,
-						"doFind": false,
-						"label": "Last Name"
-					},
-					{
-						"isExactMatch": true,
-						"fieldName": "PersonEmail",
-						"doCreate": true,
-						"doFind": true,
-						"label": "Email"
-					},
-					{
-						"isExactMatch": false,
-						"fieldName": "PersonType",
-						"doCreate": true,
-						"doFind": false,
-						"value": "Exclusive Offers Only" // Required for Person Account creation
-					}
-				]
-			},
-			{
-				"entityName": "Case",
-				"saveToTranscript": "CaseId",
-				"showOnCreate": true,
-				"entityFieldMaps": [
-					{
-						"isExactMatch": false,
-						"fieldName": "Subject",
-						"doCreate": true,
-						"doFind": false,
-						"label": "Case Subject",
-						"value": "Issue from Chat - Web"
-					},
-					{
-						"isExactMatch": false,
-						"fieldName": "Status",
-						"doCreate": true,
-						"doFind": false,
-						"label": "Case Status",
-						"value": "New"
-					}
-				]
-			}
-		];
+		//embedded_svc.settings.loadingText = ''; //(Defaults to Loading)
+		//embedded_svc.settings.storageDomain = 'yourdomain.com'; //(Sets the domain for your deployment so that visitors can navigate subdomains during a chat session)
 
-		// Pre-chat form fields
-		embedded_svc.settings.extraPrechatFormDetails = [
-			{ "label": "First Name", "transcriptFields": ["PersonFirstName"], "displayToAgent": true },
-			{ "label": "Last Name", "transcriptFields": ["PersonLastName"], "displayToAgent": true },
-			{ "label": "Email", "transcriptFields": ["PersonEmail"], "displayToAgent": true }
-		];
-
-		// Hidden Case fields
-		embedded_svc.settings.hiddenPrepopulatedFields = {
-			Subject: "Issue from Chat - Web",
-			Status: "New"
-		};
+		// Settings for Chat
+		//embedded_svc.settings.directToButtonRouting = function(prechatFormData) {
+			// Dynamically changes the button ID based on what the visitor enters in the pre-chat form.
+			// Returns a valid button ID.
+		//};
+		//embedded_svc.settings.prepopulatedPrechatFields = {}; //Sets the auto-population of pre-chat form fields
+		//embedded_svc.settings.fallbackRouting = []; //An array of button IDs, user IDs, or userId_buttonId
+		//embedded_svc.settings.offlineSupportMinimizedText = '...'; //(Defaults to Contact Us)
 
 		embedded_svc.settings.enabledFeatures = ['LiveAgent'];
 		embedded_svc.settings.entryFeature = 'LiveAgent';
-
-		// Event logging for debugging
-		embedded_svc.addEventHandler("onPrechatFormSubmit", function(prechatData) {
-			console.log("[ESW DEBUG] Prechat Form Data Submitted:", prechatData);
-		});
-
-		embedded_svc.addEventHandler("onChatRequestSuccess", function(data) {
-			console.log("[ESW DEBUG] Chat Started Successfully:", data);
-		});
-
-		embedded_svc.addEventHandler("onChatEndedByAgent", function(data) {
-			console.log("[ESW DEBUG] Chat Ended By Agent:", data);
-		});
-
-		embedded_svc.addEventHandler("onChatEndedByVisitor", function(data) {
-			console.log("[ESW DEBUG] Chat Ended By Visitor:", data);
-		});
 
 		embedded_svc.init(
 			'https://foreoab--devchat.sandbox.my.salesforce.com',
@@ -128,8 +48,6 @@
 				isOfflineSupportEnabled: false
 			}
 		);
-
-		console.log("[ESW DEBUG] Embedded Service Initialized");
 	};
 
 	if (!window.embedded_svc) {
@@ -142,5 +60,36 @@
 	} else {
 		initESW('https://service.force.com');
 	}
+</script>
+	<script type='text/javascript'>
+/* Creates a custom detail called First Name and sets the value to "Jane" */
+liveagent.addCustomDetail("First Name",);
+
+/* Creates a custom detail called Last Name and sets the value to "Doe" */
+liveagent.addCustomDetail("Last Name");
+
+/* Creates a custom detail called Email and sets the value to "555-1212" */
+liveagent.addCustomDetail("Email","PersonEmail");
+
+/* Creates a custom detail called Case Subject and sets the value to "Issue from Chat - Web" when the chat is accepted for the agent */
+
+liveagent.addCustomDetail("Case Subject", "Issue from Chat - Web");
+
+/* Creates a custom detail called Case Status and sets the value to "New" */
+liveagent.addCustomDetail("Case Status", "New");
+
+/* This does a non-exact search on cases by the value of the "Case Subject" custom detail.
+	If no results are found, it will create a case and set the case's subject and status
+	The case that's found or created will be associated to the chat and the case will open in
+	the Console for the agent when the chat is accepted */
+liveagent.findOrCreate("Case").map("Subject","Case Subject",false,false,true).map("Status","Case Status",false,false,true).saveToTranscript("CaseId").showOnCreate();
+
+/* This searches for a contact whose first and last name exactly match the values in the custom details for First and Last Name
+	If no results are found, it will create a new contact and set it's first name, last name, and phone number to the values in the custom details */
+liveagent.findOrCreate("Contact").map("FirstName","First Name",false,false,true).map("LastName","Last Name",false,false,true).map("PersonEmail","Email",true,true,true);
+
+/* The contact that's found or created will be saved or associated to the chat transcript.
+The contact will be opened for the agent in the Console and the case is linked to the contact record */
+liveagent.findOrCreate("Contact").saveToTranscript("ContactId").showOnCreate().linkToEntity("Case","ContactId");
 </script>
 </html>
